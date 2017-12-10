@@ -4,8 +4,4 @@
  * We just launch the index.html window here
  */
 
-nw.Window.open("index.html", {
-    
-}, function (win) {
-    
-});
+nw.Window.open('index.html', {}, function(win) {});

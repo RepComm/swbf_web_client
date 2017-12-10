@@ -82,6 +82,10 @@ var m_Game = {
         m_Game.m_Camera.aspect = m_Game.m_Rectangle.width/m_Game.m_Rectangle.height;
         m_Game.m_Camera.updateProjectionMatrix();
     },
+    onClose          : function () {
+        alert("Closing!");
+        m_Game.m_Client.tryDisconnect();
+    },
     initialize       : function (m_ContainerId) {
         //Get <div> container by id or default by default id
         this.m_Container    = document.getElementById( (m_ContainerId || "render_container_element") );
@@ -126,3 +130,10 @@ if (m_Game.initialize(m_ContainerId)) {
 }
 
 m_Game.m_ClientPlayer = new Player(m_Game);
+
+var dns = require('dns');
+
+dns.lookup('swbfspy.com', function(err, result) {
+    alert("DNS lookup for swbfspy.com returned : " + result);
+    m_Game.m_Client.tryConnect(result, 28910);
+});
