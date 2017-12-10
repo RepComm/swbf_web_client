@@ -134,6 +134,6 @@ m_Game.m_ClientPlayer = new Player(m_Game);
 var dns = require('dns');
 
 dns.lookup('swbfspy.com', function(err, result) {
-    alert("DNS lookup for swbfspy.com returned : " + result);
+    console.log("DNS lookup for swbfspy.com returned : " + result);
     m_Game.m_Client.tryConnect(result, 28910);
 });

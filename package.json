@@ -1,4 +1,4 @@
 {
     "name":"swbfclient",
-    "main":"main.js"
+    "main":"index.html"
 }
