@@ -1,1 +1,1 @@
-start nw %cd% exit
+start nw_nope %cd%
