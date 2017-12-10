@@ -1,0 +1,12 @@
+body {
+    overflow-x:hidden;
+    overflow-y:hidden;
+}
+
+#render_container_element {
+    position:absolute;
+    left:0px;
+    width:100vw;
+    top:0px;
+    height:100vh;
+}
