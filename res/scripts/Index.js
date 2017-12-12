@@ -57,7 +57,6 @@ var m_Game = {
     onUpdateTick  : function () {
         if (m_Game.m_ClientPlayer) {
             m_Game.m_ClientPlayer.m_Rotation.y += 0.1;
-            m_Game.m_ClientPlayer.m_Material.color.r = Math.random();
         }
     },
     onAnimationFrame : function () {

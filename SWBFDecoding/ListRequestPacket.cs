@@ -31,48 +31,48 @@ public class ListRequestPacket : GamespyTcpPacket {
         //ConcatArray({25, 100}, buffer) 'TODO: fetch port from db
         ConcatArray(BuildInvertedUInt16Array(6500), buffer)
 
-        If Not(Me.Options = GS_FLAG_NO_SERVER_LIST) Then 'Me.ParameterArray.Count > 1 Then
-            ConcatArray({ Me.ParameterArray.Length - 1, 0}, buffer)
-            ConcatArray(Me.BuildParameterArray(), buffer)
+        if (this.Options != GS_FLAG_NO_SERVER_LIST) { //Me.ParameterArray.Count > 1 Then
+            ConcatArray(new byte[] { this.ParameterArray.Length - 1, 0 }, buffer);
+            ConcatArray(this.BuildParameterArray(), buffer);
 
-            If Me.Options = GS_FLAG_SEND_GROUPS Then
-                Dim groups As List(Of GamespyServerGroup) = Me.client.server.MySQL.GetServerGroups(Me.client.GameName)
-                Logger.Log("Fetched {0} active groups from database. ({1})", LogLevel.Verbose, groups.Count.ToString())
-                For Each group As GamespyServerGroup In groups
-                    Me.AttachGroup(group, buffer)
-                Next
-            Else
-                Dim servers As List(Of GamespyGameserver) = Me.client.server.MySQL.GetServers(Me.client.GameName, Me.client.server.Config.GameserverTimeout)
-                Logger.Log("Fetched {0} active servers from database. ({1})", LogLevel.Verbose, servers.Count.ToString())
-                For Each server As GamespyGameserver In servers
-                    If server.ChallengeOK = False Then Continue For 'don't list unauthenticated servers
-                    Me.AttachServer(server, buffer)
-                Next
-            End If
+            if (this.Options = GS_FLAG_SEND_GROUPS) {
+                List<GamespyServerGroup> groups = this.client.server.MySQL.GetServerGroups(Me.client.GameName);
+                Console.WriteLine("Fetched active groups from database.");
+                foreach (GamespyServerGroup group in groups) {
+                    this.AttachGroup(group, buffer);
+                }
+            } else {
+                List<GamespyServer> servers = this.client.server.MySQL.GetServers(this.client.GameName, this.client.server.Config.GameserverTimeout);
+                Logger.Log("Fetched active servers from database.");
+                foreach (GamespyGameserver server in servers) {
+                    if (server.ChallengeOK == false) continue; //don't list unauthenticated servers
+                    this.AttachServer(server, buffer);
+                }
+            }
 
-            ConcatArray({ &H0, &HFF, &HFF, &HFF, &HFF}, buffer) 'set last bytes, \xFF\xFF\xFF\xFF indicates last server
-        Else
-            Logger.Log("Sending header to {0}.", LogLevel.Verbose, Me.client.RemoteIPEP.ToString())
-        End If
+            ConcatArray(new byte[] { 0x0, 0xFF, 0xFF, 0xFF, 0xFF }, buffer); //set last bytes, \xFF\xFF\xFF\xFF indicates last server
+        } else {
+            Console.WriteLine("Sending header to ");
+        }
 
-        Return buffer
-    End Function
+        return buffer;
+    }
 
-    Private Sub AttachGroup(ByVal group As GamespyServerGroup, ByRef buffer() As Byte)
-        ConcatArray({ GS_FLAG_HAS_KEYS}, buffer)
+    private void AttachGroup(GamespyServerGroup group, byte[] buffer) {
+        ConcatArray(new byte[] { GS_FLAG_HAS_KEYS }, buffer);
 
-        Dim gid() As Byte = BitConverter.GetBytes(group.Id)
-        Array.Reverse(gid)  'ntohl
-        ConcatArray(gid, buffer)
+        byte[] gid = BitConverter.GetBytes(group.Id);
+        Array.Reverse(gid); //ntohl
+        ConcatArray(gid, buffer);
 
-        ConcatArray({ 255}, buffer) 'Attach a delimeter indicating that there's new data here
-        For i = 1 To Me.ParameterArray.Length - 1 'Try to attach every desired param
-            Dim val As String = group.GetValue(Me.ParameterArray(i))
-            Me.PushString(buffer, val, (i = Me.ParameterArray.Length - 1))
-        Next
-    End Sub
+        ConcatArray(new byte[] { 255 }, buffer); //Attach a delimeter indicating that there's new data here
+        for (int i = 1; i < this.ParameterArray.Length - 1) { //Try to attach every desired param
+            string val = group.GetValue(this.ParameterArray(i));
+            this.PushString(buffer, val, (i = this.ParameterArray.Length - 1));
+        }
+    }
 
-    Private Sub AttachServer(ByVal server As GamespyGameserver, ByRef buffer() As Byte)
+    private void AttachServer(ByVal server As GamespyGameserver, ByRef buffer() As Byte)
         If server.PortClosed And Me.ParameterArray.Length< 2 Then Return
         Dim serverFlags As Byte = 0
         Dim ip0 As Net.IPAddress = Nothing
