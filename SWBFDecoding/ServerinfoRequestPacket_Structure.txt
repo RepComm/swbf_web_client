@@ -1,0 +1,30 @@
+ServerinfoRequestPacket Tcp byte[] structure notes!
+
+A packet response to a client about a given server's info
+Who's online on the given server, their k/d/cp captures, etc
+
+This packet is used when you select a server in the lobby, and see its details
+in the side panels (bottom left/right)
+
+References:
+https://github.com/derkalle4/gamespy-masterserver/blob/master/GamespyMasterserver/constants.vb
+TODO - Add DynamicField variables types for var,val,sep reference!
+TODO - Add bitwise flags reference
+
+===========================================================================================================
+OFFSET      TYPE        LENGTH      DESCRIPTION
+0           ushort      2           Inverted Unsigned short of the length of this entire packet (inclusive)
+2           byte        1           GS_MS_SERVER_CMD_PUSHSERVER (see constants.vb, equal to (byte)2; )
+3           byte        1           Bitwise flags for this command
+==== IF SERVER.PORTCLOSED ====
+4           byte[]      4           Requested server's firewall bypass ip0 (because it doesn't have NAT!)
+8           ushort      2           Inverted Unsigned short port of the server
+==== END IF               ====
++2          byte[]      4           ICMP server ip address (same as offset 4)
++6          var,val,sep ?           Variable,Value,Separator byte (0x0) of all of this server's info
+===========================================================================================================
+
+Credits:
+GameMaster developers (obviously),
+Norwood and RepComm for reconstructing vb to cs so we could read it properly..
+Led for letting me use swbfdepot.com to host, isn't he just the best?

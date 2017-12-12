@@ -58,5 +58,11 @@ this extension manually in VSCode extensions tab on the far left (its a square-i
 
 NOW, you can open the project in VSCode!
 File - > Open Folder - > Select swbf_web_client directory you extracted earlier.
-You should be able to run it right off the bat ( fn + F5, or Debug - > Start Debugging ),
+
+4. EDIT- In order to get NWjs working,
+we need to click 'View' menu on VSCode, select 'Command palette'
+and type in "NWjs Install" and select it from the drop down. This runs the necessary
+'find nwjs installation binaries' task so that we can do our thing!
+
+5. You should be able to run it right off the bat ( fn + F5, or Debug - > Start Debugging ),
 it should launch our game window, and some things should be in the DEBUG CONSOLE on the bottom!

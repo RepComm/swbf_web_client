@@ -4,6 +4,9 @@
  * Uses THREE.js ( threejs.org )
 */
 
+var net = require('net');
+var dns = require('dns');
+
 var m_Input = {
     keys:{},
     mouse_left:false,
@@ -82,10 +85,6 @@ var m_Game = {
         m_Game.m_Camera.aspect = m_Game.m_Rectangle.width/m_Game.m_Rectangle.height;
         m_Game.m_Camera.updateProjectionMatrix();
     },
-    onClose          : function () {
-        alert("Closing!");
-        m_Game.m_Client.tryDisconnect();
-    },
     initialize       : function (m_ContainerId) {
         //Get <div> container by id or default by default id
         this.m_Container    = document.getElementById( (m_ContainerId || "render_container_element") );
@@ -113,8 +112,6 @@ var m_Game = {
         
         window.addEventListener("resize", this.onResize);
         
-        this.m_Client = new Client();
-        
         requestAnimationFrame (this.onAnimationFrame);
         
         return true;
@@ -131,9 +128,27 @@ if (m_Game.initialize(m_ContainerId)) {
 
 m_Game.m_ClientPlayer = new Player(m_Game);
 
-var dns = require('dns');
+console.log("Lets retrieve the swbfspy serverlist!");
+console.log("Contacting DNS for ip of swbfspy.com");
 
 dns.lookup('swbfspy.com', function(err, result) {
-    console.log("DNS lookup for swbfspy.com returned : " + result);
-    m_Game.m_Client.tryConnect(result, 28910);
+    console.log("DNS says swbfspy.com is " + result);
+    console.log("Lets try to connect to " + result + ":" + 28910);
+    var tcpClient = new net.Socket();
+
+    tcpClient.on("data", function (data) {
+        console.log("Got response. Lets close the connection, and decode it the data");
+        tcpClient.destroy();
+        //I'm not 100%, but I think packets for swbf are little endian, for 32bit compat
+        //Read unsigned integer (little endian) at beginning, should be packet length..
+        //Need to decode ListRequestPacket.vb first, which is what I'm doing now!
+        //This is the current place where we're at in deving this!
+        console.log("Message length " + data.readUInt16LE(0));
+        console.log("Compared to raw data length " + data.byteLength);
+    });
+
+    tcpClient.connect(28910, result, function () {
+        console.log("Connected, now lets send them the serverlist request");
+        tcpClient.write(Buffer.from(client_constants.GS_CL_REQUEST_SERVERLIST));
+    });
 });
