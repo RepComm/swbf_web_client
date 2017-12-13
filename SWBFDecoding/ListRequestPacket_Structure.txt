@@ -1,3 +1,21 @@
-TODO
+ListRequestPacket Tcp byte[] structure notes!
+
+A packet response to a client with current server list as kept track of by given the master server
+Basic server ip address list
+
+This packet is used when you join the internet lobby to see the server browser
+in the main window
+
+References:
 Using https://github.com/derkalle4/gamespy-masterserver/blob/master/GamespyMasterserver/class/network/packets%20%5Btcp%5D/ListRequestPacket.vb
-As reference
+https://github.com/derkalle4/gamespy-masterserver/blob/master/GamespyMasterserver/constants.vb
+TODO - Add bitwise flags reference
+
+===========================================================================================================
+OFFSET      TYPE        LENGTH      DESCRIPTION
+TODO, doing this now!
+===========================================================================================================
+
+Credits:
+GameMaster developers (obviously),
+GitHub contributors!
