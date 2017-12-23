@@ -177,7 +177,7 @@ public class ListRequestPacket : GamespyTcpPacket {
     private byte[] BuildParameterArray() {
         byte[] buffer = { };
         foreach (string Str in ParameterArray) {
-            if (Str == null || Str.Equals("") { //Don't attach empty params
+            if (Str == null || Str.Equals("")) { //Don't attach empty params
                 ConcatArray(GetBytes(Str), buffer);
                 ConcatArray(new byte[] { 0, 0 }, buffer); //Delimeter is \x0\x0 for this one
             }

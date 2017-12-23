@@ -12,6 +12,7 @@ var m_Input = {
     mouse_left:false,
     mouse_right:false,
     onKeyDown : function (evt) {
+        //TODO uncomment limiting keys to WASD
         if (evt.key == 'w' || evt.key == 'a' || evt.key == 's' || evt.key == 'd') {
             m_Input.keys[evt.key] = true;
         }
@@ -40,7 +41,7 @@ var m_Game = {
     m_LastRenderTick        : 0,
     m_LastUpdateTick        : 0,
     m_RendersPerSecond      : 20,
-    m_UpdatesPerSecond      : 15,
+    m_UpdatesPerSecond      : 20,
     m_EnlapsedRenderWait    : 0,
     m_EnlapsedUpdateWait    : 0,
     m_TimeBetweenRenders    : undefined,
@@ -56,7 +57,16 @@ var m_Game = {
     //Event fired for every update, called m_UpdatesPerSecond times a second
     onUpdateTick  : function () {
         if (m_Game.m_ClientPlayer) {
-            m_Game.m_ClientPlayer.m_Rotation.y += 0.1;
+            if (m_Input.keys.a) {
+                m_Game.m_ClientPlayer.position.x -= 0.25;
+            } else if (m_Input.keys.d) {
+                m_Game.m_ClientPlayer.position.x += 0.25;
+            }
+            if (m_Input.keys.w) {
+                m_Game.m_ClientPlayer.position.z -= 0.25;
+            } else if (m_Input.keys.s) {
+                m_Game.m_ClientPlayer.position.z += 0.25;
+            }
         }
     },
     onAnimationFrame : function () {
@@ -100,6 +110,7 @@ var m_Game = {
             this.m_FarClip
         );
         this.m_Camera.position.z = 5;
+        this.m_Camera.position.y = 2;
         this.m_Renderer     = new THREE.WebGLRenderer();
         this.m_Renderer.setSize( this.m_Rectangle.width, this.m_Rectangle.height );
         this.m_Container.appendChild( this.m_Renderer.domElement );
@@ -111,6 +122,9 @@ var m_Game = {
         
         window.addEventListener("resize", this.onResize);
         
+        document.body.onkeydown = m_Input.onKeyDown;
+        document.body.onkeyup = m_Input.onKeyUp;
+
         requestAnimationFrame (this.onAnimationFrame);
         
         return true;
@@ -126,6 +140,7 @@ if (m_Game.initialize(m_ContainerId)) {
 }
 
 m_Game.m_ClientPlayer = new Player(m_Game);
+m_Game.m_ClientPlayer.spawn(0, 1, 0);
 
 console.log("Lets retrieve the swbfspy serverlist!");
 console.log("Contacting DNS for ip of swbfspy.com");

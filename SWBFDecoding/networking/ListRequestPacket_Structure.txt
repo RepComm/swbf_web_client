@@ -13,7 +13,19 @@ TODO - Add bitwise flags reference
 
 ===========================================================================================================
 OFFSET      TYPE        LENGTH      DESCRIPTION
-TODO, doing this now!
+
+BuildServerArray section
+Header
+0           byte[]      4           Our public IP as client
+4           byte[]      2           inverted ushort '6500'
+6           byte        1           Param length
+7           byte        1           Always 0x0 (BE short with pervious byte?)
+8           byte        1           GS_FLAG_HAS_KEYS
+Server groups first
+9           int         4           Reverse bytes of Group ID
+13          byte        1           0xFFF separator of data
+14          
+
 ===========================================================================================================
 
 Credits:
