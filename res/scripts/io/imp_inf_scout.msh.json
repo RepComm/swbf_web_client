@@ -1,0 +1,72 @@
+{
+    "type": "HEDR",
+    "contentSize": 121036,
+    "MSH2_0": {
+        "type": "MSH2",
+        "contentSize": 117984,
+        "SINF": {
+            "type": "SINF",
+            "contentSize": 100,
+            "NAME": "IMP_Scout_Skeleton\u0000\u0000",
+            "FRAM": {
+                "begin": 0,
+                "end": 1,
+                "fps": 29.970029830932617
+            },
+            "BBOX": {
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0,
+                    "w": 1
+                },
+                "center": {
+                    "x": -0.0077544450759887695,
+                    "y": 1.021206259727478,
+                    "z": -0.04080498218536377
+                },
+                "dimension": {
+                    "w": 0.9372228384017944,
+                    "h": 1.0236891508102417,
+                    "d": 0.24409937858581543
+                },
+                "boundingSphereRadius": 0
+            },
+            "CAMR": {
+                "type": "CAMR",
+                "contentSize": 64,
+                "NAME": "Camera\u0000\u0000",
+                "DATA_0": {
+                    "type": "DATA",
+                    "contentSize": 40,
+                    "unhandled": true
+                },
+                "MATL_0": {
+                    "type": "MATL",
+                    "contentSize": 232,
+                    "unhandled": true
+                },
+                "MODL_0": {
+                    "type": "MODL",
+                    "contentSize": 20208,
+                    "unhandled": true
+                },
+                "SKL2_0": {
+                    "type": "SKL2",
+                    "contentSize": 504,
+                    "unhandled": true
+                },
+                "BLN2_0": {
+                    "type": "BLN2",
+                    "contentSize": 204,
+                    "unhandled": true
+                },
+                "ANM2_0": {
+                    "type": "ANM2",
+                    "contentSize": 2304,
+                    "unhandled": true
+                }
+            }
+        }
+    }
+}
