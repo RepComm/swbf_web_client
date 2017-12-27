@@ -7,7 +7,7 @@
         "SINF": {
             "type": "SINF",
             "contentSize": 100,
-            "NAME": "IMP_Scout_Skeleton\u0000\u0000",
+            "NAME": "IMP_Scout_Skeleton",
             "FRAM": {
                 "begin": 0,
                 "end": 1,
@@ -35,36 +35,115 @@
             "CAMR": {
                 "type": "CAMR",
                 "contentSize": 64,
-                "NAME": "Camera\u0000\u0000",
-                "DATA_0": {
+                "NAME": "Camera",
+                "DATA": {
                     "type": "DATA",
-                    "contentSize": 40,
-                    "unhandled": true
+                    "floats": [
+                        0.9425450563430786,
+                        1.6019206047058105,
+                        2.579702377319336,
+                        -0.002673619892448187,
+                        1.0176095962524414,
+                        0.005130008794367313,
+                        0,
+                        1.076188564300537
+                    ],
+                    "near": 0.10000000149011612,
+                    "far": 32768
                 },
-                "MATL_0": {
+                "MATL": {
                     "type": "MATL",
                     "contentSize": 232,
-                    "unhandled": true
-                },
-                "MODL_0": {
-                    "type": "MODL",
-                    "contentSize": 20208,
-                    "unhandled": true
-                },
-                "SKL2_0": {
-                    "type": "SKL2",
-                    "contentSize": 504,
-                    "unhandled": true
-                },
-                "BLN2_0": {
-                    "type": "BLN2",
-                    "contentSize": 204,
-                    "unhandled": true
-                },
-                "ANM2_0": {
-                    "type": "ANM2",
-                    "contentSize": 2304,
-                    "unhandled": true
+                    "materialCount": 2,
+                    "MATD_0": {
+                        "type": "MATD",
+                        "contentSize": 92,
+                        "NAME": "_1Shirt0",
+                        "DATA": {
+                            "type": "DATA",
+                            "diffuseColor": [
+                                0.699999988079071,
+                                0.699999988079071,
+                                0.699999988079071,
+                                1
+                            ],
+                            "ambientColor": [
+                                1,
+                                1,
+                                1,
+                                1
+                            ],
+                            "specularColor": [
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                0.30000001192092896,
+                                1
+                            ],
+                            "specularIntensity": 50
+                        },
+                        "ATRB_0": {
+                            "type": "ATRB",
+                            "contentSize": 4,
+                            "unhandled": true
+                        },
+                        "MATD_0": {
+                            "type": "MATD",
+                            "contentSize": 120,
+                            "NAME": "Material0",
+                            "DATA": {
+                                "type": "DATA",
+                                "diffuseColor": [
+                                    0.699999988079071,
+                                    0.699999988079071,
+                                    0.699999988079071,
+                                    107374176
+                                ],
+                                "ambientColor": [
+                                    0,
+                                    0,
+                                    0,
+                                    1
+                                ],
+                                "specularColor": [
+                                    0.30000001192092896,
+                                    0.30000001192092896,
+                                    0.30000001192092896,
+                                    1
+                                ],
+                                "specularIntensity": 50
+                            },
+                            "ATRB_0": {
+                                "type": "ATRB",
+                                "contentSize": 4,
+                                "unhandled": true
+                            },
+                            "TX0D_0": {
+                                "type": "TX0D",
+                                "contentSize": 20,
+                                "unhandled": true
+                            },
+                            "MODL_0": {
+                                "type": "MODL",
+                                "contentSize": 20208,
+                                "unhandled": true
+                            },
+                            "SKL2_0": {
+                                "type": "SKL2",
+                                "contentSize": 504,
+                                "unhandled": true
+                            },
+                            "BLN2_0": {
+                                "type": "BLN2",
+                                "contentSize": 204,
+                                "unhandled": true
+                            },
+                            "ANM2_0": {
+                                "type": "ANM2",
+                                "contentSize": 2304,
+                                "unhandled": true
+                            }
+                        }
+                    }
                 }
             }
         }
