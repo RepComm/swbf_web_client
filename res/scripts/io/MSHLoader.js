@@ -12,13 +12,13 @@ function tag(buffer, offset) {
 }
 
 function MSHLoader () {
+    this.reachedEofSafely = false;
+    this.finalResult = {type:"HEDR"};
+    
     /** MSHLoader.prototype.readTag function
      * Reads the given tag and all of its children
      * Function reused as tree parsing scheme (MSH data is in tree format)
      */
-    this.reachedEofSafely = false;
-    this.finalResult = {type:"HEDR"};
-    
     this.readTag = function (parent, buf, start, leveldeep = 0, levelwidth = 0) {
         var currentOffset = start;
         
@@ -88,6 +88,7 @@ function MSHLoader () {
                 break;
             case "FRAM":
                 var c = parent[tagName] = {
+                    type:tageName,
                     begin:0,
                     end:0,
                     fps:1.0
@@ -104,6 +105,7 @@ function MSHLoader () {
                 break;
             case "BBOX":
                 var c = parent[tagName] = {
+                    type:tagName,
                     rotation:{x:0.0, y:0.0, z:0.0, w:1.0},
                     center:{x:0.0, y:0.0, z:0.0},
                     dimension:{w:0.0, h:0.0, d:0.0},

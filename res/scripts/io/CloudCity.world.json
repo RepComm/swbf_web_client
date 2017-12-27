@@ -1,0 +1,45 @@
+{
+    "name":"Bespin: Cloud City",
+    "contributors":"",
+    "boundaries":{
+        centerX:0.0,
+        centerY:0.0,
+        cylinderRadius:1000.0
+    },
+    "sky":{
+        "type":"cube",
+        "textures":["top.png","left.png","right.png","front.png","rear.png","bottom.png"],
+        "color":"#ffffff",
+        "unlit":true
+    },
+    "objects":[
+        {
+            "UUID":10459122,
+            "model":"some_model.msh.json",
+            "label":"that one building",
+            "position":{
+                x:0,
+                y:0,
+                z:0
+            },
+            "rotation":{
+                x:0,
+                y:0,
+                z:0
+            },
+            "scale":{
+                x:0,
+                y:0,
+                z:0
+            }
+            "collision":{
+                "_comment":"same = use specified 'model' given naming convention, generate_convex = generated convex mesh, none = no collision",
+                "uses":"same",
+                "_comment":"prefix = name comes before, suffix = name comes after, search = look anywhere in the name of each mesh",
+                "_comment":"next param is the actual string to search for",
+                "naming_convention":"prefix collision_"
+            },
+            
+        }
+    ]
+}

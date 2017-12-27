@@ -1,0 +1,11 @@
+I think worlds should be modular, but also be able to be standalone:
+JSON shouldn't store pixels for textures, but browser dataurls could be a string version!
+They can even store transparency.
+
+In combination with embedding the .msh.json files (easy to do),
+we could seriously implement an entire world and it's content in a single JSON file, and
+stream it to clients (as the server). Of course it would be a special server features
+only, but that isn't such a big deal. More players will be able to start playing
+the new client for free than can buy a used version of SWBF (2004) anyways.
+
+The world.json file could even remain on the client as if 'installed' for good..
