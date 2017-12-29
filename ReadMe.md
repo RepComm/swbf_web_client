@@ -1,20 +1,19 @@
 #SWBF Web Client*
 
-Attempts to recreate the battlefront client with all original code/art/everything
-This client has a goal of connecting to original software servers, while studying them
-to recreate the server software also!
+Attempts to recreate the battlefront client
 
-See developer instructions for setting up the development environment:
-https://github.com/RepComm/swbf_web_client/blob/master/DevelopmentSetupInstructions.txt
+with all original code/art/everything
 
-Currently implemented things:
--Basic scene and rendering setup
--Non-event based input handling
--Start of a player class that renders a shape and it's name (reused for remote clients
- on client/server, and for local control of our own player as client)
--Separate rendering and update loops that have updates/second control
--Start of master server polling for current server list (almost usable!)
+This client has a goal of connecting to
+
+original software servers, while studying
+
+them to recreate the server software also!
+
+***Read the Wiki for development instructions, code map, etc:
+https://github.com/RepComm/swbf_web_client/wiki ***
+
+
+I'll write a roadmap of our progress some time soon when I'm not so busy..
 
 Things will be a little slow until about mid-january.
-
-I'll write more later!

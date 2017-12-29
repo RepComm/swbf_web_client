@@ -2,9 +2,9 @@
     "name":"Bespin: Cloud City",
     "contributors":"",
     "boundaries":{
-        centerX:0.0,
-        centerY:0.0,
-        cylinderRadius:1000.0
+        "centerX":0.0,
+        "centerY":0.0,
+        "cylinderRadius":1000.0
     },
     "sky":{
         "type":"cube",
@@ -18,19 +18,19 @@
             "model":"some_model.msh.json",
             "label":"that one building",
             "position":{
-                x:0,
-                y:0,
-                z:0
+                "x":0,
+                "y":0,
+                "z":0
             },
             "rotation":{
-                x:0,
-                y:0,
-                z:0
+                "x":0,
+                "y":0,
+                "z":0
             },
             "scale":{
-                x:0,
-                y:0,
-                z:0
+                "x":0,
+                "y":0,
+                "z":0
             }
             "collision":{
                 "_comment":"same = use specified 'model' given naming convention, generate_convex = generated convex mesh, none = no collision",
