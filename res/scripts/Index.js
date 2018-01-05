@@ -89,10 +89,10 @@ var m_Game = {
         }
     },
     onResize         : function (evt) {
-        m_Game.m_Rectangle = m_Game.m_Container.getBoundingClientRect();
-        m_Game.m_Renderer.setSize( m_Game.m_Rectangle.width, m_Game.m_Rectangle.height );
-        m_Game.m_Camera.aspect = m_Game.m_Rectangle.width/m_Game.m_Rectangle.height;
-        m_Game.m_Camera.updateProjectionMatrix();
+        this.m_Rectangle = this.m_Container.getBoundingClientRect();
+        this.m_Renderer.setSize( this.m_Rectangle.width, this.m_Rectangle.height );
+        this.m_Camera.aspect = this.m_Rectangle.width/this.m_Rectangle.height;
+        this.m_Camera.updateProjectionMatrix();
     },
     initialize       : function (m_ContainerId) {
         //Get <div> container by id or default by default id
@@ -120,10 +120,28 @@ var m_Game = {
         
         this.m_Container.addEventListener("keydown", m_Input.onKeyDown);
         
-        window.addEventListener("resize", this.onResize);
+        window.addEventListener("resize", (evt) => this.onResize() );
         
         document.body.onkeydown = m_Input.onKeyDown;
         document.body.onkeyup = m_Input.onKeyUp;
+
+        var geometry = new THREE.PlaneGeometry( 200, 200, 64, 64 );
+        
+        for (var i = 0, l = geometry.vertices.length; i < l; i++) {
+            geometry.vertices[i].z = Math.random() * 10;
+        }
+        
+        var material = new THREE.MeshBasicMaterial(
+            {
+                color: 0xffff00,
+                side: THREE.DoubleSide
+            } 
+        );
+        
+        var plane = new THREE.Mesh( geometry, material );
+        this.m_Scene.add( plane );
+        plane.rotation.x = 90;
+        console.log("Added terrain");
 
         requestAnimationFrame (this.onAnimationFrame);
         

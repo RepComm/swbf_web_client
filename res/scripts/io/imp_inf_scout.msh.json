@@ -9,11 +9,13 @@
             "contentSize": 100,
             "NAME": "IMP_Scout_Skeleton",
             "FRAM": {
+                "type": "FRAM",
                 "begin": 0,
                 "end": 1,
                 "fps": 29.970029830932617
             },
             "BBOX": {
+                "type": "BBOX",
                 "rotation": {
                     "x": 0,
                     "y": 0,

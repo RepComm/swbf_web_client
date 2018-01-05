@@ -88,7 +88,7 @@ function MSHLoader () {
                 break;
             case "FRAM":
                 var c = parent[tagName] = {
-                    type:tageName,
+                    type:tagName,
                     begin:0,
                     end:0,
                     fps:1.0
