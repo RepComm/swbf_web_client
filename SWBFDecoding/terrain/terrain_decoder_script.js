@@ -189,22 +189,23 @@ function init () {
     let terrainPng = new PNG({width:gridTotalSize, height:gridTotalSize, colorType:6});
     let idx = 0;
     
-    //Not writing PNG correct yet
+    //Record all height values as is
     for (let i=0; i<terrainHeightDataSize; i++) {
         terrainHeightData[i] = buf.readInt16LE(offset);
         offset+=2; //Each short is 2 bytes
     }
     
-    let ind = 0;
+    console.log(terrainHeightData);
     
-    for (let i=0; i<terrainHeightDataSize*4; i+=4) {
-        ind = Math.floor(terrainHeightData[i/4]); //YES, IT WORKS!
-        terrainPng.data[i] = ind; //Red
-        terrainPng.data[i+1] = ind; //Green?
-        terrainPng.data[i+2] = ind;
-        terrainPng.data[i+3] = 255; //Alpha
+    let ind = 0;
+    for (let i=0; i<terrainHeightDataSize; i++) {
+        ind = Math.floor( terrainHeightData[i] );
+        terrainPng.data[i*4] = ind;
+        terrainPng.data[(i*4)+1] = ind;
+        terrainPng.data[(i*4)+2] = ind;
+        terrainPng.data[(i*4)+3] = 255;
     }
-    console.log(ind);
+    
     terrainPng.pack().pipe(fs.createWriteStream('out.png'));
 }
 
