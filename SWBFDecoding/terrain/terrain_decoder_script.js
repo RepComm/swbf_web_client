@@ -2,9 +2,10 @@
  * https://github.com/MathewSachin/NIco/wiki/Ico,-Cur-and-PE-Formats
  */
 
-var fs = require("fs");
+let fs = require("fs");
+let PNG = require("pngjs").PNG;
 
-var inputTerrainFile = undefined, outputFile = undefined;
+let inputTerrainFile = undefined, outputFile = undefined;
 
 function handleArgs () {
     for (var i=0; i<process.argv.length; i++) {
@@ -25,18 +26,18 @@ function init () {
         console.log("No TER file specified for input! Use -in=terrain.ter for example!");
         return;
     }
-    var buf = fs.readFileSync(inputTerrainFile);
+    let buf = fs.readFileSync(inputTerrainFile);
     
     if (buf.toString("utf8", 0, 4) !== "TERR") {
         console.log(inputTerrainFile + " may not be a terrain file, it doesn't even have a good header!");
         return;
     }
-    var offset = 4;
+    let offset = 4;
     
-    var unknown01 = buf.readInt32LE(offset); //Riley said this is usually 21
+    let unknown01 = buf.readInt32LE(offset); //Riley said this is usually 21
     offset+=4;
     
-    var gridDisplayRect = {
+    let gridDisplayRect = {
         minX:buf.readInt16LE(offset),
         minY:buf.readInt16LE(offset+2),
         maxX:buf.readInt16LE(offset+4),
@@ -44,69 +45,169 @@ function init () {
     };
     offset+=8;
     
-    console.log("Display Rect = " + JSON.stringify(gridDisplayRect));
+    console.log("Display Rect", JSON.stringify(gridDisplayRect, null, "  "));
     
-    var unknown02 = buf.readInt32LE(offset); //Usually 164
+    let unknown02 = buf.readInt32LE(offset); //Usually 164
     offset+=4;
     
-    var texStretchRecipArray = [];
+    let texStretchRecipArray = [];
     
-    for (var i=0; i<16; i++) {
+    for (let i=0; i<16; i++) {
         texStretchRecipArray.push(buf.readFloatLE(offset));
-        offset +4;
+        offset +=4;
     }
     
-    var texMappingRuleArray = [];
+    console.log("Texture Stretch", JSON.stringify(texStretchRecipArray, null, "  "));
     
-    for (var i=0; i<16; i++) {
+    let texMappingRuleArray = [];
+    
+    for (let i=0; i<16; i++) {
         texMappingRuleArray.push(buf.readUInt8(offset));
         offset+=1;
     }
     
-    var texRotationArray = [];
+    console.log("Texture Mapping Rules", JSON.stringify(texMappingRuleArray, null, "  "));
     
-    for (var i=0; i<16; i++) {
+    let texRotationArray = [];
+    
+    for (let i=0; i<16; i++) {
         texRotationArray.push(buf.readFloatLE(offset));
         offset+=4;
     }
     
-    //Doing something wrong right before this
+    console.log("Texture Rotations?", JSON.stringify(texRotationArray, null, "  "));
     
-    var heightMapScale = buf.readFloatLE(offset); //ZeroEditor uses 0.01 by default
-    console.log("Height Map Scale " + heightMapScale);
+    let heightMapScale = buf.readFloatLE(offset); //ZeroEditor uses 0.01 by default
+    console.log("Height Map Scale Vertical", heightMapScale);
     offset+=4;
     
-    var terrainScaleXY = buf.readFloatLE(offset); //ZeroEditor uses 8.0 by default (no wonder swbf terrain looks like crap!)
+    let terrainScaleXY = buf.readFloatLE(offset); //ZeroEditor uses 8.0 by default (no wonder swbf terrain looks like crap!)
+    offset+=4;
+    console.log("Terrain Scale Width|Height", terrainScaleXY);
+    
+    let unknown03 = buf.readInt32LE(offset);
     offset+=4;
     
-    var unknown03 = buf.readInt32LE(offset);
+    let gridTotalSize = buf.readInt32LE(offset);
     offset+=4;
     
-    var gridTotalSize = buf.readInt32LE(offset);
+    console.log("Total Grid Size", gridTotalSize);
+    
+    let unknown04 = buf.readInt32LE(offset);
     offset+=4;
     
-    var unknown04 = buf.readInt32LE(offset);
-    offset+=4;
+    console.log(offset, unknown04);
     
-    var texNames = [];
-    var texNrmlNames = [];
+    //Textures refs have the potential to skip indices
+    let textureRefs = [];
+    
+    let currentTextureName = undefined;
     
     //16 sets of texture & detail texture entries (32 byte 0x0 terminated strings)
-    for (var i=0; i<16; i+=2) {
-        var tn = buf.toString('utf8', offset, 32);
-        texNames.push(tn);//.substring(0, tn.lastIndexOf(0)));
-        offset+=32;
+    for (let i=0; i<16; i++) {
+        //Get texture file
+        currentTextureName = "";
+        for (let j=0; j<32; j++) {
+            if (buf[offset] !== 0) {
+                currentTextureName += String.fromCharCode(buf[offset]);
+            }
+            offset++;
+        }
         
-        var tdn = buf.toString('utf8', offset, 32);
-        texNrmlNames.push(tdn);//.substring(0, tdn.lastIndexOf(0)));
-        offset+=32;
+        if (!textureRefs[i]) {
+            textureRefs[i] = undefined;
+        }
         
-        console.log("Texture " + texNames[i] + " with Detail Texture " + texNrmlNames[i]);
+        if (currentTextureName.length < 1 || currentTextureName[0] == 0) {
+            console.log("No texture in slot", i);
+        } else {
+            if (!textureRefs[i]) {
+                textureRefs[i] = {};
+            }
+            textureRefs[i].tex = currentTextureName;
+        }
+        //Get normal file
+        currentTextureName = "";
+        for (let j=0; j<32; j++) {
+            if (buf[offset] !== 0) {
+                currentTextureName += String.fromCharCode(buf[offset]);
+            }
+            offset++;
+        }
+        
+        if (currentTextureName.length < 1 || currentTextureName[0] == 0) {
+        } else {
+            textureRefs[i].bump = currentTextureName;
+        }
     }
     
+    console.log("Texture References", JSON.stringify(textureRefs, null, "  "));
     
+    offset+=68; //Unknown purpose and structure, skip
     
+    let waterRefs = [];
+    let currentWaterTile = undefined;
     
+    for (let i=0; i<15; i++) {
+        currentWaterTile = {};
+        currentWaterTile.height = buf.readFloatLE(offset);
+        offset+=8; //4 bytes for float, 4 skipped because of duplicate?
+        offset+=8; //8 bytes always zero
+        currentWaterTile.animU = buf.readFloatLE(offset);
+        offset+=4;
+        currentWaterTile.animV = buf.readFloatLE(offset);
+        offset+=4;
+        currentWaterTile.repeatU = buf.readFloatLE(offset);
+        offset+=4;
+        currentWaterTile.repeatV = buf.readFloatLE(offset);
+        offset+=4;
+        currentWaterTile.argbColorInteger = buf.readInt32LE(offset);
+        offset+=4;
+        
+        currentTextureName = "";
+        for (let j=0; j<32; j++) {
+            if (buf[offset] !== 0) {
+                currentTextureName += String.fromCharCode(buf[offset]);
+            }
+            offset++;
+        }
+        
+        if (currentTextureName.length < 1 || currentTextureName[0] == 0) {
+            waterRefs.push(undefined);
+        } else {
+            currentWaterTile.textureFile = currentTextureName;
+            waterRefs.push(currentWaterTile);
+        }
+    }
+    
+    console.log("Water Data", JSON.stringify(waterRefs, null, "  "));
+    
+    offset += 524; //Unknown purpose, end of header
+    
+    let terrainHeightDataSize = gridTotalSize * gridTotalSize;
+    let terrainHeightData = new Array(terrainHeightDataSize);
+    let terrainPng = new PNG({width:gridTotalSize, height:gridTotalSize, colorType:6});
+    let idx = 0;
+    //Not writing PNG correct yet
+    for (let y=0; y<gridTotalSize; y++) {
+        for (let x=0; x<gridTotalSize; x++) {
+            idx = x * y;
+            
+            terrainHeightData[idx] = buf.readInt16LE(offset);
+            
+            terrainPng.data[idx] = (terrainHeightData[idx] / 32,767);
+            terrainPng.data[idx+1] = 255;
+            terrainPng.data[idx+2] = 255;
+            terrainPng.data[idx+3] = 255;
+            
+            offset+=2;
+        }
+    }
+    
+    terrainPng.pack().pipe(fs.createWriteStream('out.png'));
+    fs.writeFile("out.data", terrainHeightData, function () {
+        console.log("Write raw file ");
+    });
 }
 
 init();

@@ -1,4 +1,7 @@
 {
-    "name":"swbfclient",
-    "main":"index.html"
+  "name": "swbfclient",
+  "main": "index.html",
+  "dependencies": {
+    "pngjs": "^3.3.1"
+  }
 }
