@@ -30,7 +30,7 @@ var m_Game = {
     m_Camera                : undefined,
     m_FieldOfView           : 75,
     m_NearClip              : 0.1,
-    m_FarClip               : 500,
+    m_FarClip               : 1000,
     
     //Dealing with the DOM
     m_Renderer              : undefined,
@@ -58,14 +58,14 @@ var m_Game = {
     onUpdateTick  : function () {
         if (m_Game.m_ClientPlayer) {
             if (m_Input.keys.a) {
-                m_Game.m_ClientPlayer.position.x -= 0.25;
+                m_Game.m_ClientPlayer.position.x -= 5.25;
             } else if (m_Input.keys.d) {
-                m_Game.m_ClientPlayer.position.x += 0.25;
+                m_Game.m_ClientPlayer.position.x += 5.25;
             }
             if (m_Input.keys.w) {
-                m_Game.m_ClientPlayer.position.y += 0.25;
+                m_Game.m_ClientPlayer.position.y += 5.25;
             } else if (m_Input.keys.s) {
-                m_Game.m_ClientPlayer.position.y -= 0.25;
+                m_Game.m_ClientPlayer.position.y -= 5.25;
             }
         }
     },
@@ -136,8 +136,8 @@ var m_Game = {
         let terrainData = builder.fromTERFile("C:/Users/Jonathan/Desktop/Projects/Node/swbf_web_client/res/scripts/io/hoth.ter");
         this.terrainData = terrainData;
 
-        var geometry = new THREE.PlaneGeometry( terrainData.gridDisplayRect.maxX*2,
-            terrainData.gridDisplayRect.maxY*2,
+        var geometry = new THREE.PlaneGeometry( terrainData.gridDisplayRect.maxX*2*terrainData.mapScaleXY,
+            terrainData.gridDisplayRect.maxY*2*terrainData.mapScaleXY,
             terrainData.gridTotalSize,
             terrainData.gridTotalSize);
         
@@ -168,7 +168,7 @@ if (m_Game.initialize(m_ContainerId)) {
 }
 
 m_Game.m_ClientPlayer = new Player(m_Game);
-m_Game.m_ClientPlayer.spawn(0, 0, 22);
+m_Game.m_ClientPlayer.spawn(0, 0, 25);
 m_Game.m_ClientPlayer.add(m_Game.m_Camera);
 m_Game.m_Camera.rotateX(THREE.Math.degToRad(90.0));
 /* 
