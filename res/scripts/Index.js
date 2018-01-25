@@ -63,9 +63,9 @@ var m_Game = {
                 m_Game.m_ClientPlayer.position.x += 0.25;
             }
             if (m_Input.keys.w) {
-                m_Game.m_ClientPlayer.position.z -= 0.25;
+                m_Game.m_ClientPlayer.position.y += 0.25;
             } else if (m_Input.keys.s) {
-                m_Game.m_ClientPlayer.position.z += 0.25;
+                m_Game.m_ClientPlayer.position.y -= 0.25;
             }
         }
     },
@@ -109,9 +109,9 @@ var m_Game = {
             this.m_NearClip,
             this.m_FarClip
         );
-        this.m_Camera.position.z = 5;
-        this.m_Camera.position.y = 2;
-        this.m_Renderer     = new THREE.WebGLRenderer();
+        this.m_Camera.position.z = 2;
+        this.m_Camera.position.y = -5;
+        this.m_Renderer = new THREE.WebGLRenderer();
         this.m_Renderer.setSize( this.m_Rectangle.width, this.m_Rectangle.height );
         this.m_Container.appendChild( this.m_Renderer.domElement );
         
@@ -125,22 +125,32 @@ var m_Game = {
         document.body.onkeydown = m_Input.onKeyDown;
         document.body.onkeyup = m_Input.onKeyUp;
 
-        var geometry = new THREE.PlaneGeometry( 200, 200, 64, 64 );
+        var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+        this.dlight = directionalLight;
+        this.m_Scene.add( directionalLight );
+        directionalLight.position.setZ(5);
+
+        //TEST LOADING SWBF TERRAIN FILES
+        let builder = new TerrainBuilder();
+        console.log(builder);
+        let terrainData = builder.fromTERFile("C:/Users/Jonathan/Desktop/Projects/Node/swbf_web_client/res/scripts/io/hoth.ter");
+        this.terrainData = terrainData;
+
+        var geometry = new THREE.PlaneGeometry( terrainData.gridDisplayRect.maxX*2,
+            terrainData.gridDisplayRect.maxY*2,
+            terrainData.gridTotalSize,
+            terrainData.gridTotalSize);
         
         for (var i = 0, l = geometry.vertices.length; i < l; i++) {
-            geometry.vertices[i].z = Math.random() * 10;
+            geometry.vertices[i].z = terrainData.heightData[i] * terrainData.heightMapScale;
         }
-        
-        var material = new THREE.MeshBasicMaterial(
-            {
-                color: 0xffff00,
-                side: THREE.DoubleSide
-            } 
-        );
+        geometry.computeVertexNormals();
+        var material = new THREE.MeshPhongMaterial() ;
         
         var plane = new THREE.Mesh( geometry, material );
+        this.plane = plane;
         this.m_Scene.add( plane );
-        plane.rotation.x = 90;
+        //plane.rotation.x = 90;
         console.log("Added terrain");
 
         requestAnimationFrame (this.onAnimationFrame);
@@ -158,8 +168,10 @@ if (m_Game.initialize(m_ContainerId)) {
 }
 
 m_Game.m_ClientPlayer = new Player(m_Game);
-m_Game.m_ClientPlayer.spawn(0, 1, 0);
-
+m_Game.m_ClientPlayer.spawn(0, 0, 22);
+m_Game.m_ClientPlayer.add(m_Game.m_Camera);
+m_Game.m_Camera.rotateX(THREE.Math.degToRad(90.0));
+/* 
 console.log("Lets retrieve the swbfspy serverlist!");
 console.log("Contacting DNS for ip of swbfspy.com");
 
@@ -184,3 +196,4 @@ dns.lookup('swbfspy.com', function(err, result) {
         tcpClient.write(Buffer.from(client_constants.GS_CL_REQUEST_SERVERLIST));
     });
 });
+ */

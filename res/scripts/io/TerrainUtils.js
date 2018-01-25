@@ -1,6 +1,22 @@
 
 let fs = require("fs");
 
+class TerrainData {
+    constructor () {
+        this.unknown01 = undefined;
+        this.gridDisplayRect = undefined;
+        this.unknown02 = undefined;
+        this.textureData = undefined;
+        this.heightMapScale = undefined;
+        this.mapScaleXY = undefined;
+        this.unknown03 = undefined;
+        this.gridTotalSize = undefined;
+        this.unknown04 = undefined;
+        this.waterTileData = undefined;
+        this.heightData = undefined;
+    }
+}
+
 class TerrainBuilder {
     constructor () {
         
@@ -19,7 +35,7 @@ class TerrainBuilder {
             console.log(filepath + " may not be a terrain file, it doesn't even have a good header!");
             return;
         }
-        let terrainData = {};
+        let terrainData = new TerrainData();
         let offset = 4;
         
         terrainData.unknown01 = buf.readInt32LE(offset); //Riley said this is usually 21
@@ -33,7 +49,7 @@ class TerrainBuilder {
         };
         offset+=8;
         
-        let unknown02 = buf.readInt32LE(offset); //Usually 164
+        terrainData.unknown02 = buf.readInt32LE(offset); //Usually 164
         offset+=4;
         
         //BEGIN TERRAIN TEXTURE DATA
@@ -170,4 +186,5 @@ function test () {
     });
 }
 
-test();
+
+//test();

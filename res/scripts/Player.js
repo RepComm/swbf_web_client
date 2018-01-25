@@ -17,6 +17,7 @@ class Player extends THREE.Group {
         game.m_Scene.add( this );
 
         this.add(this.m_Mesh);
+        this.m_Mesh.rotateX(THREE.Math.degToRad(90.0));
 
         var textCanvas = document.createElement('canvas');
         textCanvas.width = this.m_Name.length * 60;
