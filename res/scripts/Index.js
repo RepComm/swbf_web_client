@@ -7,103 +7,99 @@
 var net = require('net');
 var dns = require('dns');
 
-var m_Input = {
-    keys:{},
-    mouse_left:false,
-    mouse_right:false,
-    onKeyDown : function (evt) {
-        //TODO uncomment limiting keys to WASD
-        if (evt.key == 'w' || evt.key == 'a' || evt.key == 's' || evt.key == 'd') {
-            m_Input.keys[evt.key] = true;
-        }
-    },
-    onKeyUp : function (evt) {
-        if (evt.key == 'w' || evt.key == 'a' || evt.key == 's' || evt.key == 'd') {
-            m_Input.keys[evt.key] = false;
-        }
-    }
-};
-
 var m_Game = {
     //Lets take some variables for our game!
-    m_Scene                 : undefined,
-    m_Camera                : undefined,
-    m_FieldOfView           : 75,
-    m_NearClip              : 0.1,
-    m_FarClip               : 1000,
-    
+    m_Scene: undefined,
+    m_Camera: undefined,
+    m_FieldOfView: 75,
+    m_NearClip: 0.1,
+    m_FarClip: 500,
+
     //Dealing with the DOM
-    m_Renderer              : undefined,
-    m_Container             : undefined,
-    m_Rectangle             : undefined,
-    
+    m_Renderer: undefined,
+    m_Container: undefined,
+    m_Rectangle: undefined,
+
     //Game looping (one for render, one for logic)
-    m_LastRenderTick        : 0,
-    m_LastUpdateTick        : 0,
-    m_RendersPerSecond      : 20,
-    m_UpdatesPerSecond      : 20,
-    m_EnlapsedRenderWait    : 0,
-    m_EnlapsedUpdateWait    : 0,
-    m_TimeBetweenRenders    : undefined,
-    m_TimeBetweenUpdates    : undefined,
-    
+    m_LastRenderTick: 0,
+    m_LastUpdateTick: 0,
+    m_RendersPerSecond: 20,
+    m_UpdatesPerSecond: 30,
+    m_EnlapsedRenderWait: 0,
+    m_EnlapsedUpdateWait: 0,
+    m_UpdateDelta       : 0,
+    m_TimeBetweenRenders: undefined,
+    m_TimeBetweenUpdates: undefined,
+
     //USES Client.js
-    m_Client                : undefined,
-    
+    m_Client: undefined,
+
+    //Input management
+    inputManager: undefined,
+
+    //Physics
+    physicsWorld: undefined,
+
     //Event fired for every render, called m_RendersPerSecond times a second
-    onRenderTick     : function () {
-        m_Game.m_Renderer.render(m_Game.m_Scene, m_Game.m_Camera);
+    onRenderTick: function () {
+        this.m_Renderer.render(this.m_Scene, this.m_Camera);
     },
     //Event fired for every update, called m_UpdatesPerSecond times a second
-    onUpdateTick  : function () {
-        if (m_Game.m_ClientPlayer) {
-            if (m_Input.keys.a) {
-                m_Game.m_ClientPlayer.position.x -= 5.25;
-            } else if (m_Input.keys.d) {
-                m_Game.m_ClientPlayer.position.x += 5.25;
+    onUpdateTick: function () {
+        //Physics update
+        //var dt = (time - lastTime) / 1000;
+        //this.physicsWorld.step(this.m_TimeBetweenUpdates, this.m_EnlapsedUpdateWait, 3);
+        //this.m_ClientPlayer.updatePhysics();
+
+        if (this.m_ClientPlayer) {
+            if (this.inputManager.keys.a) {
+                this.m_ClientPlayer.position.x -= this.m_ClientPlayer.walkSpeed / this.m_UpdateDelta;
+            } else if (this.inputManager.keys.d) {
+                this.m_ClientPlayer.position.x += this.m_ClientPlayer.walkSpeed / this.m_UpdateDelta;
             }
-            if (m_Input.keys.w) {
-                m_Game.m_ClientPlayer.position.y += 5.25;
-            } else if (m_Input.keys.s) {
-                m_Game.m_ClientPlayer.position.y -= 5.25;
+            if (this.inputManager.keys.w) {
+                this.m_ClientPlayer.position.y += this.m_ClientPlayer.walkSpeed / this.m_UpdateDelta;
+            } else if (this.inputManager.keys.s) {
+                m_Game.m_ClientPlayer.position.y -= this.m_ClientPlayer.walkSpeed / this.m_UpdateDelta;
             }
         }
     },
-    onAnimationFrame : function () {
-        requestAnimationFrame(m_Game.onAnimationFrame);
-        
-        m_Game.m_EnlapsedUpdateWait = Date.now() - m_Game.m_LastUpdateTick;
-        if (m_Game.m_EnlapsedUpdateWait > m_Game.m_TimeBetweenUpdates) {
-            m_Game.onUpdateTick();
-            
-            m_Game.m_LastUpdateTick = Date.now();
-            m_Game.m_EnlapsedUpdateWait = 0;
+    onAnimationFrame: function () {
+        requestAnimationFrame(() => this.onAnimationFrame());
+
+        this.m_EnlapsedUpdateWait = Date.now() - this.m_LastUpdateTick;
+        this.m_UpdateDelta = this.m_EnlapsedUpdateWait / (1000/this.m_UpdatesPerSecond);
+        if (this.m_EnlapsedUpdateWait > this.m_TimeBetweenUpdates) {
+            this.onUpdateTick();
+
+            this.m_LastUpdateTick = Date.now();
+            this.m_EnlapsedUpdateWait = 0;
         }
-        
-        m_Game.m_EnlapsedRenderWait = Date.now() - m_Game.m_LastRenderTick;
-        if (m_Game.m_EnlapsedRenderWait > m_Game.m_TimeBetweenRenders) {
-            m_Game.onRenderTick();
-            
-            m_Game.m_LastRenderTick = Date.now();
-            m_Game.m_EnlapsedRenderWait = 0;
+
+        this.m_EnlapsedRenderWait = Date.now() - this.m_LastRenderTick;
+        if (this.m_EnlapsedRenderWait > this.m_TimeBetweenRenders) {
+            this.onRenderTick();
+
+            this.m_LastRenderTick = Date.now();
+            this.m_EnlapsedRenderWait = 0;
         }
     },
-    onResize         : function (evt) {
+    onResize: function (evt) {
         this.m_Rectangle = this.m_Container.getBoundingClientRect();
-        this.m_Renderer.setSize( this.m_Rectangle.width, this.m_Rectangle.height );
-        this.m_Camera.aspect = this.m_Rectangle.width/this.m_Rectangle.height;
+        this.m_Renderer.setSize(this.m_Rectangle.width, this.m_Rectangle.height);
+        this.m_Camera.aspect = this.m_Rectangle.width / this.m_Rectangle.height;
         this.m_Camera.updateProjectionMatrix();
     },
-    initialize       : function (m_ContainerId) {
+    initialize: function (m_ContainerId) {
         //Get <div> container by id or default by default id
-        this.m_Container    = document.getElementById( (m_ContainerId || "render_container_element") );
-        
+        this.m_Container = document.getElementById((m_ContainerId || "render_container_element"));
+
         if (!this.m_Container) return false;
-        
-        this.m_Rectangle    = this.m_Container.getBoundingClientRect();
-        this.m_Scene        = new THREE.Scene();
-        
-        this.m_Camera       = new THREE.PerspectiveCamera(
+
+        this.m_Rectangle = this.m_Container.getBoundingClientRect();
+        this.m_Scene = new THREE.Scene();
+
+        this.m_Camera = new THREE.PerspectiveCamera(
             this.m_FieldOfView,
             this.m_Rectangle.width / this.m_Rectangle.height,
             this.m_NearClip,
@@ -112,22 +108,21 @@ var m_Game = {
         this.m_Camera.position.z = 2;
         this.m_Camera.position.y = -5;
         this.m_Renderer = new THREE.WebGLRenderer();
-        this.m_Renderer.setSize( this.m_Rectangle.width, this.m_Rectangle.height );
-        this.m_Container.appendChild( this.m_Renderer.domElement );
-        
+        this.m_Renderer.setSize(this.m_Rectangle.width, this.m_Rectangle.height);
+        this.m_Container.appendChild(this.m_Renderer.domElement);
+
         this.m_TimeBetweenRenders = 1000 / this.m_RendersPerSecond;
         this.m_TimeBetweenUpdates = 1000 / this.m_UpdatesPerSecond;
-        
-        this.m_Container.addEventListener("keydown", m_Input.onKeyDown);
-        
-        window.addEventListener("resize", (evt) => this.onResize() );
-        
-        document.body.onkeydown = m_Input.onKeyDown;
-        document.body.onkeyup = m_Input.onKeyUp;
 
-        var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+        window.addEventListener("resize", (evt) => this.onResize());
+
+        //Initialize input manager
+        this.inputManager = new InputManager();
+        this.inputManager.init(document.body);
+
+        var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
         this.dlight = directionalLight;
-        this.m_Scene.add( directionalLight );
+        this.m_Scene.add(directionalLight);
         directionalLight.position.setZ(5);
 
         //TEST LOADING SWBF TERRAIN FILES
@@ -136,25 +131,30 @@ var m_Game = {
         let terrainData = builder.fromTERFile("C:/Users/Jonathan/Desktop/Projects/Node/swbf_web_client/res/scripts/io/hoth.ter");
         this.terrainData = terrainData;
 
-        var geometry = new THREE.PlaneGeometry( terrainData.gridDisplayRect.maxX*2*terrainData.mapScaleXY,
-            terrainData.gridDisplayRect.maxY*2*terrainData.mapScaleXY,
+        var geometry = new THREE.PlaneGeometry(terrainData.gridDisplayRect.maxX * 2 * terrainData.mapScaleXY,
+            terrainData.gridDisplayRect.maxY * 2 * terrainData.mapScaleXY,
             terrainData.gridTotalSize,
             terrainData.gridTotalSize);
-        
+
         for (var i = 0, l = geometry.vertices.length; i < l; i++) {
             geometry.vertices[i].z = terrainData.heightData[i] * terrainData.heightMapScale;
         }
         geometry.computeVertexNormals();
-        var material = new THREE.MeshPhongMaterial() ;
-        
-        var plane = new THREE.Mesh( geometry, material );
-        this.plane = plane;
-        this.m_Scene.add( plane );
-        //plane.rotation.x = 90;
-        console.log("Added terrain");
+        var material = new THREE.MeshPhongMaterial();
 
-        requestAnimationFrame (this.onAnimationFrame);
-        
+        var plane = new THREE.Mesh(geometry, material);
+        this.plane = plane;
+        this.m_Scene.add(plane);
+
+        //BEGIN PHYSICS STUFF
+        /*this.physicsWorld = new CANNON.World({
+            gravity: new CANNON.Vec3(0, 0, -9.82)
+        });
+        this.physicsWorld.broadphase = new CANNON.NaiveBroadphase();*/
+
+
+        requestAnimationFrame(() => this.onAnimationFrame());
+
         return true;
     }
 };
@@ -171,6 +171,15 @@ m_Game.m_ClientPlayer = new Player(m_Game);
 m_Game.m_ClientPlayer.spawn(0, 0, 25);
 m_Game.m_ClientPlayer.add(m_Game.m_Camera);
 m_Game.m_Camera.rotateX(THREE.Math.degToRad(90.0));
+/*
+var sphereBody = new CANNON.Body({
+    mass: 5, // kg 
+    position: new CANNON.Vec3(0, 0, 25),
+    shape: new CANNON.Sphere(1)
+});
+m_Game.physicsWorld.addBody(sphereBody);
+m_Game.m_ClientPlayer.physicsComponent = sphereBody;
+*/
 /* 
 console.log("Lets retrieve the swbfspy serverlist!");
 console.log("Contacting DNS for ip of swbfspy.com");

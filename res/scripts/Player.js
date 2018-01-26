@@ -14,6 +14,7 @@ class Player extends THREE.Group {
         this.m_Geometry = new THREE.CylinderGeometry(1, 1, 2, 8);
         this.m_Material = new THREE.MeshBasicMaterial( { color: 0x7777ff } );
         this.m_Mesh = new THREE.Mesh( this.m_Geometry, this.m_Material );
+        this.physicsComponent = undefined;
         game.m_Scene.add( this );
 
         this.add(this.m_Mesh);
@@ -33,6 +34,8 @@ class Player extends THREE.Group {
         this.m_NameTextSprite = new THREE.Sprite(textMat);
         this.m_NameTextSprite.scale.set( this.m_Name.length * this.m_TextDrawScale, this.m_TextDrawScale, 1 );
         this.add(this.m_NameTextSprite);
+
+        this.walkSpeed = 2.2;
     }
     
     spawn (m_X, m_Y, m_Z) {
@@ -67,5 +70,13 @@ class Player extends THREE.Group {
     
     addHealth (m_ToAdd) {
         this.m_Health += m_ToAdd;
+    }
+
+    updatePhysics () {
+        if (this.physicsComponent) {
+            this.position.x = this.physicsComponent.position.x-5;
+            this.position.y = this.physicsComponent.position.y;
+            this.position.z = this.physicsComponent.position.z;
+        }
     }
 }

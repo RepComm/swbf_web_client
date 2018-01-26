@@ -8,5 +8,5 @@ rem PUT YOUR OWN ABSOLUTE DIRECTORY PATH TO NW INSTALL DIRECTORY HERE
 cd "C:/Program Files/nwjs"
 
 rem PUT YOUR OWN ABSOLUTE PATH TO PROJECT DIRECTORY HERE
-start nw.exe C:/Users/Jonathan/Desktop/Projects/swbf_web_client
+start nw.exe C:/Users/Jonathan/Desktop/Projects/Node/swbf_web_client
 @pause
