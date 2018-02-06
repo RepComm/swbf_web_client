@@ -20,6 +20,7 @@ Debug code will undoubtedly contain original assets for development purposes, bu
 - I am not responsible for forks/clones of this project using assets from places otherwise illegal, or unproper.
 - All of my own work for this project is public domain (everything in a release should be safe to reuse at your discretion). Please have fun repurposing whatever you wish with no charge/guilt! I don't care if it's commercial or not, make the world a better place!
 
+##Working on integrating discord channel and my website to make this project more mature. Should be rolling out in a week or two!
 
 ### Roadmap (work in progress)
 

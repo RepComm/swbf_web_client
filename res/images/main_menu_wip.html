@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Menu WIP</title>
+        <style>
+        body {
+            background-color:#222;
+        }
+        #load_anim_outer {
+            position:absolute;
+            
+            transform-origin:50% 50%;
+            
+            animation-duration: 2.5s;
+            animation-name: outer_rotate;
+            animation-iteration-count:infinite;
+            
+            left: 40vw;
+            top: 40vh;
+            
+            display:inline-block;
+        }
+        #load_anim_inner {
+            position:absolute;
+            
+            transform-origin:50% 50%;
+            
+            animation-duration: 2.2s;
+            animation-name: inner_rotate;
+            animation-iteration-count:infinite;
+            
+            top:10%;
+            left:10%;
+        }
+        
+        @keyframes outer_rotate {
+            from {
+                transform: rotate(360deg);
+            }
+            to {
+                transform: rotate(0deg);
+            }
+        }
+        @keyframes inner_rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        </style>
+	</head>
+	<body>
+        <div id="render_container_element">
+            
+        </div>
+        <div id="load_anim_outer">
+            <image src="OuterRotary.png" style="position:relative;">
+            <div id="load_anim_inner">
+                <image src="InnerRotary.png" style="position:relative;">
+            </div>
+        </div>
+
+	</body>
+</html>

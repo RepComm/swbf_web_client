@@ -140,6 +140,33 @@ var m_Game = {
             geometry.vertices[i].z = terrainData.heightData[i] * terrainData.heightMapScale;
         }
         geometry.computeVertexNormals();
+
+        let saveGeometryToObj = function (geometry) {
+            let s = "";
+            for (let i=0; i<geometry.vertices.length; i++) {
+                s+= "v " + (geometry.vertices[i].x) + " " +
+                geometry.vertices[i].y + " " +
+                geometry.vertices[i].z + "\n";
+            }
+        
+            for (let i=0; i<geometry.faces.length; i++) {
+        
+                s+= "f " + (geometry.faces[i].a+1) + " " +
+                (geometry.faces[i].b+1) + " " +
+                (geometry.faces[i].c+1);
+        
+                if (geometry.faces[i].d !== undefined) {
+                    s+= " " + (geometry.faces[i].d+1);
+                }
+                s+= "\n";
+            }
+        
+            return s;
+        }
+        fs.writeFile("terrain.obj", saveGeometryToObj(geometry), function () {
+            console.log("Saved terrain");
+        });
+
         var material = new THREE.MeshPhongMaterial();
 
         var plane = new THREE.Mesh(geometry, material);
