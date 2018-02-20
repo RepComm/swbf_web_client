@@ -1,4 +1,4 @@
-# SWBF Web Client
+
 This project has the following goals:
 - Replicate the battlefront (2004) game in HTML5/Node/NWjs
 - Have minimum compatibility with original game servers
