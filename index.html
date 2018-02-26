@@ -1,22 +1,56 @@
 <!DOCTYPE html>
 <html lang="en-US">
-	<head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<title>Battlefront Web Client</title>
-		<link rel="stylesheet" href="res/styles/index.css">
-	</head>
-	<body>
+
+<head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Battlefront Web Client</title>
+        <link rel="stylesheet" href="res/styles/index.css">
+</head>
+
+<body>
         <div id="render_container_element">
-            
+
         </div>
+
         <script src="res/scripts/three.js"></script>
         <script src="res/scripts/cannon.js"></script>
+
+
         <script src="res/scripts/io/TerrainUtils.js"></script>
         <script src="res/scripts/Utils/InputManager.js"></script>
         <script src="res/scripts/Player.js"></script>
         <script src="res/scripts/Client.js"></script>
         <script src="res/scripts/index.js"></script>
-        
-	</body>
+
+        <!--
+        <script type="text/javascript">
+                var net = require('net');
+                var dns = require('dns');
+                var util = require('util');
+        </script>
+
+        <script src="res/scripts/Logger.js"></script>
+        <script src="res/scripts/net/GameServer.js"></script>
+        <script src="res/scripts/net/HeaderPacket.js"></script>
+        <script src="res/scripts/net/ServerListPacket.js"></script>
+        <script src="res/scripts/net/CryptStream.js"></script>
+        <script src="res/scripts/net/StdInt.js"></script>
+        <script src="res/scripts/net/ServerBrowsingClient.js"></script>
+
+        <script type="text/javascript">
+                //minimal setup to query servers
+                var sbc = new ServerBrowsingClient("swbfront2pc", "swbfront2pc", "hMO2d4");
+                sbc.connect(function () {
+                        sbc.getServers(function (servers) {
+                                servers.forEach(function (e) {
+                                        Logger.log(LOGLEVEL_DEBUG, "[Demo] %s:%d %s/%s %s %s", e.wanAddress, e.port, e.numplayers.value, e.maxplayers.value, e.mapname.value, e.hostname.value);
+                                });
+                                sbc.close();
+                        });
+                });
+        </script>
+ -->
+</body>
+
 </html>
