@@ -1,0 +1,30 @@
+{
+  "name": "node-openbf-rendering",
+  "version": "1.0.0",
+  "description": "Custom renderers and UI system for the openbf project",
+  "main": "node-openbf-render.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/node-openbf-project/node-openbf-rendering.git"
+  },
+  "keywords": [
+    "rendering",
+    "node",
+    "openbf",
+    "threejs",
+    "terrain",
+    "ui",
+    "shaders",
+    "math"
+  ],
+  "author": "Jon/RepComm",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/node-openbf-project/node-openbf-rendering/issues"
+  },
+  "homepage": "https://github.com/node-openbf-project/node-openbf-rendering#readme",
+  "dependencies": {}
+}
